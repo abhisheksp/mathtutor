@@ -21,8 +21,3 @@ def parse_images(image_urls):
         response = json.loads(request.text)
         responses.append(response['latex'])
     return responses
-
-
-images = ['https://raw.githubusercontent.com/HieuNgo/math_tutor/master/api-examples/images/test.jpg',
-          'https://raw.githubusercontent.com/HieuNgo/math_tutor/master/api-examples/images/test.jpg']
-print(parse_images(images))

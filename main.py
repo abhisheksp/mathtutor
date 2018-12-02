@@ -19,8 +19,7 @@ def feedback_handler():
     image_urls = request_body['images']
     latex_responses = ocr.parse_images(image_urls)
     formatted_responses = latex.format_response(latex_responses)
-    questions = list(map(lambda x: x[0], formatted_responses))
-    feedback = wolfram.solve(questions)
+    feedback = wolfram.solve(formatted_responses)
     return jsonify(feedback)
 
 

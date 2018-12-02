@@ -1,22 +1,15 @@
-from xml.etree import ElementTree
-
 import requests
 
 
-def get_roots(polynomial_equation):
-    roots = []
-    params = {'appid': 'QU7434-QE6KPPYTAX', 'input': polynomial_equation}
-    url = "http://api.wolframalpha.com/v2/query"
-    res = requests.get(url, params)
-    tree = ElementTree.fromstring(res.content)
-    for child in tree:
-        if child.attrib['title'] == "Solutions" or child.attrib['title'] == "Solution":
-            for subPod in child:
-                for text in subPod:
-                    if text.text is not None:
-                        roots.append(text.text.replace(' ', ''))
-    return roots
+def find_roots(question):
+    params = {'exp': question}
+    url = 'https://www.wolframcloud.com/objects/e82904b9-7632-481b-9b4d-fab27ddd8639'
+    res = requests.get(url, params=params)
+    return res.text
 
 
-def solve(latex_string):
-    return latex_string
+def solve(latex_equations):
+    questions = list(map(lambda x: x[0], latex_equations))
+    roots = list(map(find_roots, questions))
+    response = {'correct': True, 'reference_solution': roots}
+    return response
