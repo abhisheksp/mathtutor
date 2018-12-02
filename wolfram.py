@@ -47,8 +47,6 @@ def analyze(question, steps):
 
 def solve(latex_equations):
     questions = list(map(lambda x: x[0], latex_equations))
-    # roots = list(map(find_roots, questions))
-    # analysis_responses = list(map(analyze, zip(questions, latex_equations)))
     responses = []
     for question, steps in zip(questions, latex_equations):
         analysis = analyze(question, steps)
@@ -56,6 +54,3 @@ def solve(latex_equations):
         response = {'question': question, 'analysis': analysis, 'student_solution': student_solution}
         responses.append(response)
     return responses
-
-    # response = {'correct': True, 'reference_solution': '', 'analysis': analysis_responses, 'full_result': }
-    # return response
