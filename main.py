@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 
+import latex
 import ocr
 import wolfram
 
@@ -16,8 +17,10 @@ def home():
 def feedback_handler():
     request_body = request.get_json()
     image_urls = request_body['images']
-    latex_string = ocr.parse_images(image_urls)
-    feedback = wolfram.solve(latex_string)
+    latex_responses = ocr.parse_images(image_urls)
+    formatted_responses = latex.format_response(latex_responses)
+    questions = list(map(lambda x: x[0], formatted_responses))
+    feedback = wolfram.solve(questions)
     return jsonify(feedback)
 
 
