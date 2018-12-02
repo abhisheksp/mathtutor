@@ -1,25 +1,5 @@
 import re
 
-
-def preprocess(line):
-    line = line \
-        .replace('\left.', '') \
-        .replace('\begin', '') \
-        .replace('{array}', '') \
-        .replace('{ l }', '') \
-        .replace('\end', '') \
-        .replace('\right', '') \
-        .replace('.', '') \
-        .replace(' \\ ', '|')
-    line = line.replace('{', '').replace('}', '').replace(' ', '')
-    steps = line.split('|')
-    return steps
-
-
-def preprocess_ends(line):
-    return line.replace('{', '').replace('}', '').replace(' ', '')
-
-
 # TODO: copy pasta, fix
 def format_response(latex_responses):
     formatted_responses = []
