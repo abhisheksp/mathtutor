@@ -1,5 +1,9 @@
 import re
 
+import requests
+import uuid
+
+
 # TODO: copy pasta, fix
 def format_response(latex_responses):
     formatted_responses = []
@@ -24,3 +28,22 @@ def format_response(latex_responses):
                 save.append(tmp)
         formatted_responses.append(save)
     return formatted_responses
+
+
+def to_image(formula, file_name=None):
+    file_name = file_name or 'img/{}.png'.format(str(uuid.uuid4()))
+    r = requests.get('http://latex.codecogs.com/png.latex?\dpi{300} \huge %s' % formula)
+    with open(file_name, 'wb') as f:
+        f.write(r.content)
+    return file_name
+
+
+def format_integrals(latex_responses):
+    result = []
+    for response in latex_responses:
+        if '\\int' in response:
+            response = response \
+                .replace('d x', '\\, d x') \
+                .replace('dx', '\\, dx')
+        result.append(response)
+    return result

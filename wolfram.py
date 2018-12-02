@@ -2,6 +2,9 @@ import json
 
 import requests
 
+import image
+import latex
+
 
 def find_roots(question):
     params = {'exp': question}
@@ -15,15 +18,15 @@ def full_results(latex_exp):
     full_form_url = 'https://www.wolframcloud.com/objects/b6228cee-58da-43d0-9c98-077a390614b5'
     res = requests.get(full_form_url, params=params)
     input_exp = 'solve {}'.format(res.text)
-    full_results_url = 'http://api.wolframalpha.com/v2/query?appid=QU7434-QE6KPPYTAX&format=plaintext&podstate=Result__Step-by-step%20solution&output=json&input=' + input_exp
+    full_results_url = 'http://api.wolframalpha.com/v2/query?appid=QU7434-QE6KPPYTAX&podstate=Result__Step-by-step%20solution&output=json&input=' + input_exp
     res = requests.get(full_results_url)
     data = json.loads(res.text)
     for pod in data['queryresult']['pods']:
         if pod['id'] == 'Result':
             for subpod in pod['subpods']:
                 if subpod['title'] == 'Possible intermediate steps':
-                    solution_string = subpod['plaintext']
-    return solution_string.splitlines()
+                    solution_string = subpod['img']['src']
+    return solution_string
 
 
 def analyze(question, steps):
@@ -51,6 +54,16 @@ def solve(latex_equations):
     for question, steps in zip(questions, latex_equations):
         analysis = analyze(question, steps)
         student_solution = steps
-        response = {'question': question, 'analysis': analysis, 'student_solution': student_solution}
+        question_img = expression_to_img(question)
+        student_solution_img = expressions_to_img(student_solution)
+        response = {'question': question_img, 'analysis': analysis, 'student_solution': student_solution_img}
         responses.append(response)
     return responses
+
+
+def expressions_to_img(expressions):
+    return list(map(lambda x: image.upload(latex.to_image(x)), expressions))
+
+
+def expression_to_img(expression):
+    return image.upload(latex.to_image(expression))
